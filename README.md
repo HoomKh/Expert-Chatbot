@@ -42,7 +42,7 @@ expert_chatbot/
 ### 1. Clone the repo
 
 ```bash
-git clone https://github.com/Hoom-KH/expert_chatbot.git
+git clone https://github.com/HoomKH/expert_chatbot.git
 cd expert_chatbot
 ```
 
@@ -116,7 +116,7 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 
 ## 📄 License
 
-MIT © [Hoom\_KH](https://github.com/Hoom-KH)
+MIT © [HoomKH](https://github.com/HoomKH)
 
 ---
 
