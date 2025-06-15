@@ -6,9 +6,9 @@ from langchain.chains.router import MultiPromptChain
 from langchain.chains.router.llm_router import LLMRouterChain, RouterOutputParser
 from langchain.callbacks.base import BaseCallbackHandler
 import os
+from dotenv import load_dotenv
 import streamlit as st
 import time
-
 
 
 # ========= Stream Handler ==========
@@ -98,12 +98,13 @@ Here is a question:
 
 
 # ========== OpenAI Model ==========
-
+load_dotenv()
+openai_api_key = os.getenv("OPENAI_API_KEY")
 router_llm = ChatOpenAI(
     temperature=0,
     model="gpt-4",
     streaming=False,
-    openai_api_key="",
+    openai_api_key=openai_api_key,
 )
 
 # Answering LLMs (streaming-enabled)
@@ -112,7 +113,7 @@ streaming_llm = ChatOpenAI(
     model="gpt-4",
     streaming=True,
     callbacks=[],
-    openai_api_key="",
+    openai_api_key=openai_api_key,
 )
 
 # ========== Destination Chains ==========
@@ -182,7 +183,9 @@ multi_chain = MultiPromptChain(
 # ========== Streamlit UI ==========
 st.set_page_config(page_title="Expert Chatbot", page_icon="🧠")
 st.title("🧠 Expert Chatbot")
-st.caption("Ask anything — the bot will route your question to the most suitable expert domain.")
+st.caption(
+    "Ask anything — the bot will route your question to the most suitable expert domain."
+)
 
 st.markdown(
     """
@@ -206,7 +209,7 @@ st.markdown(
     }
     </style>
     """,
-    unsafe_allow_html=True
+    unsafe_allow_html=True,
 )
 
 if "chat_history" not in st.session_state:
@@ -225,24 +228,21 @@ if user_input:
     container = st.empty()
     handler = StreamHandler(container)
 
-
     for chain in list(destination_chains.values()) + [default_chain]:
         chain.llm.callbacks = [handler]
 
     with st.spinner("Thinking..."):
         _ = multi_chain.run(user_input)
 
-    container.empty() 
-
+    container.empty()
 
     blur_msg = st.empty()
     blur_msg.markdown(
         "<div style='text-align:center; padding:1rem; font-size:1rem; color:gray;'>✨ Preparing expert response...</div>",
-        unsafe_allow_html=True
+        unsafe_allow_html=True,
     )
     time.sleep(2)
     blur_msg.empty()
-
 
     st.session_state.chat_history.append(("user", user_input))
     st.session_state.chat_history.append(("assistant", f"\n{handler.text.strip()}"))
@@ -250,7 +250,9 @@ if user_input:
 for sender, msg in st.session_state.chat_history:
     with st.chat_message(sender):
         if sender == "user":
-            st.markdown(f"<div class='fade-in user-question'>{msg}</div>", unsafe_allow_html=True)
+            st.markdown(
+                f"<div class='fade-in user-question'>{msg}</div>",
+                unsafe_allow_html=True,
+            )
         else:
             st.markdown(f"<div class='fade-in'>{msg}</div>", unsafe_allow_html=True)
-
