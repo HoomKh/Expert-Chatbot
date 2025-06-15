@@ -122,10 +122,3 @@ MIT © [Hoom\_KH](https://github.com/Hoom-KH)
 
 > Made with ❤️ using GPT-4, LangChain, and Streamlit
 
-```
-
-Let me know if you want to add:
-- a badge for deployments (e.g., Streamlit Cloud or HuggingFace Space),
-- animated demo GIF section,
-- or a logo/banner for branding.
-```
