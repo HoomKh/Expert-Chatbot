@@ -4,14 +4,11 @@ from langchain.prompts import ChatPromptTemplate, PromptTemplate
 from langchain.chains import LLMChain
 from langchain.chains.router import MultiPromptChain
 from langchain.chains.router.llm_router import LLMRouterChain, RouterOutputParser
-from langchain.callbacks.base import BaseCallbackHandler
 import os
 from dotenv import load_dotenv
 import streamlit as st
-import time
 
-from prompt import prompt_infos, MULTI_PROMPT_ROUTER_TEMPLATE
-from handlers import StreamHandler
+from prompt import prompt_infos, MULTI_PROMPT_ROUTER_TEMPLATE, default_prompt
 
 load_dotenv()
 api_key = os.getenv("OPENAI_API_KEY")
@@ -36,7 +33,8 @@ streaming_llm = ChatOpenAI(
 # ///////////Destination Chains///////////
 destination_chains = {}
 for p in prompt_infos:
-    prompt = ChatPromptTemplate.from_template(p["prompt_template"])
+    prompt = ChatPromptTemplate.from_template(template=p["prompt_template"])
+    prompt.input_variables = ["input", "history", "ltm"]
     chain = LLMChain(llm=streaming_llm, prompt=prompt)
     destination_chains[p["name"]] = chain
 
@@ -44,8 +42,9 @@ destination = [f"{p['name']} : {p['description']}" for p in prompt_infos]
 destination_str = "\n".join(destination)
 
 # ///////////Default Chain///////////
-default_prompt = ChatPromptTemplate.from_template("{input}")
-default_chain = LLMChain(llm=streaming_llm, prompt=default_prompt)
+default_prompt_template = ChatPromptTemplate.from_template(default_prompt)
+default_prompt_template.input_variables = ["input", "history", "ltm"]
+default_chain = LLMChain(llm=streaming_llm, prompt=default_prompt_template)
 
 # ///////////Router Chain///////////
 router_template = MULTI_PROMPT_ROUTER_TEMPLATE.format(destinations=destination_str)
