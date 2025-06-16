@@ -1,7 +1,7 @@
 # 🧠 Expert Chatbot
 
-A smart, multi-domain chatbot built with **LangChain**, **OpenAI GPT-4**, and **Streamlit**.  
-It intelligently routes your question to the right expert — whether it's philosophy, biology, programming, or economics.
+A smart, memory-enabled multi-domain chatbot built with **LangChain**, **OpenAI GPT-4**, and **Streamlit**. 
+It routes your question to the most relevant expert (e.g., biology, CS, medicine), keeps track of your conversation context with short-term memory, and remembers personal details using long-term memory — like your name, goals, or preferences.
 
 ![LangChain](https://img.shields.io/badge/langchain-v0.1.17-blue)
 ![Streamlit](https://img.shields.io/badge/streamlit-%F0%9F%A7%A1-red)
@@ -11,13 +11,15 @@ It intelligently routes your question to the right expert — whether it's philo
 
 ## 🌟 Features
 
-- ✅ AI Expert Routing using LangChain
-- ✅ Support for 10+ knowledge domains
-- ✅ Fast response with OpenAI GPT-4
-- ✅ Real-time token streaming (via StreamHandler)
-- ✅ Interactive Streamlit UI with chat history
-- ✅ Secure API Key via `.env` file
-- ✅ Fully modular and maintainable codebase
+- ✅ Multi-Expert Routing using LangChain
+- ✅ Support for 10+ specialized knowledge domains
+- ✅ Real-time token streaming via StreamHandler
+- ✅ Short-term memory per chat (ConversationBufferMemory)
+- ✅ Long-term memory across chats (ConversationSummaryMemory)
+- ✅ Memory filter to store only meaningful info (e.g. name, job)
+- ✅ Interactive Streamlit UI with chat history per session
+- ✅ Secure API key loading via `.env`
+- ✅ Modular, readable, and maintainable architecture
 
 ---
 
@@ -25,15 +27,15 @@ It intelligently routes your question to the right expert — whether it's philo
 
 ```text
 expert_chatbot/
-├── app.py              # Streamlit UI
+├── app.py              # Main Streamlit UI (refactored)
 ├── chains.py           # LangChain Router & Expert Chains
-├── handlers.py         # Streaming Token Handler
-├── prompt.py           # Expert prompt templates
-├── .env                # API key (do not commit!)
-├── .gitignore
+├── handlers.py         # Token streaming handler
+├── memory.py           # Memory setup & LTM classifier
+├── prompt.py           # Expert and default prompt templates
+├── .env                # Your OpenAI API key (excluded)
 ├── requirements.txt
 └── README.md
-````
+```
 
 ---
 
@@ -64,11 +66,11 @@ OPENAI_API_KEY=your_openai_api_key_here
 streamlit run app.py
 ```
 
-Then open your browser to: [http://localhost:8501](http://localhost:8501)
+Then visit: [http://localhost:8501](http://localhost:8501)
 
 ---
 
-## 💬 Supported Domains
+## 💬 Supported Expert Domains
 
 * 🧬 Biology
 * 🪐 Astronomy
@@ -85,21 +87,20 @@ Then open your browser to: [http://localhost:8501](http://localhost:8501)
 
 ## 🧪 Tech Stack
 
-| Layer          | Tech Used                  |
-| -------------- | -------------------------- |
-| Frontend       | Streamlit                  |
-| LLM Backbone   | OpenAI GPT-4               |
-| Routing Engine | LangChain (RouterRunnable) |
-| Env Handling   | python-dotenv              |
+| Layer            | Technology                     |
+|------------------|---------------------------------|
+| Frontend         | Streamlit                      |
+| LLM Backbone     | OpenAI GPT-4                   |
+| Routing Engine   | LangChain (MultiPromptChain)   |
+| Memory System    | LangChain Memory (short + long)|
+| Env Handling     | python-dotenv                  |
 
 ---
 
 ## 🔐 Security Note
 
-To protect your API key:
-
-* Store it in a `.env` file (never hardcode it).
-* Add `.env` to your `.gitignore` to avoid exposing it publicly.
+* Use `.env` to load your API key securely
+* Never commit `.env` to GitHub (it's in `.gitignore`)
 
 ```gitignore
 .env
@@ -110,7 +111,7 @@ __pycache__/
 
 ## 🙌 Contributions
 
-Pull requests are welcome. For major changes, please open an issue first to discuss your ideas.
+Pull requests are welcome. For major changes, open an issue first to discuss your idea.
 
 ---
 
@@ -120,5 +121,4 @@ MIT © [HoomKH](https://github.com/HoomKH)
 
 ---
 
-> Made with ❤️ using GPT-4, LangChain, and Streamlit
-
+> Built with ❤️ using LangChain, GPT-4, and Streamlit
