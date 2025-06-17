@@ -34,7 +34,7 @@ streaming_llm = ChatOpenAI(
 destination_chains = {}
 for p in prompt_infos:
     prompt = ChatPromptTemplate.from_template(template=p["prompt_template"])
-    prompt.input_variables = ["input", "history", "ltm"]
+    prompt.input_variables = ["input", "history", "ltm", "context"]
     chain = LLMChain(llm=streaming_llm, prompt=prompt)
     destination_chains[p["name"]] = chain
 
@@ -43,7 +43,7 @@ destination_str = "\n".join(destination)
 
 # ///////////Default Chain///////////
 default_prompt_template = ChatPromptTemplate.from_template(default_prompt)
-default_prompt_template.input_variables = ["input", "history", "ltm"]
+default_prompt_template.input_variables = ["input", "history", "ltm", "context"]
 default_chain = LLMChain(llm=streaming_llm, prompt=default_prompt_template)
 
 # ///////////Router Chain///////////

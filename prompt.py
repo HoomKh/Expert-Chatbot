@@ -1,4 +1,4 @@
-#expert prompt
+# expert prompt
 prompt_infos = [
     {
         "name": "biology",
@@ -10,6 +10,9 @@ User Info:
 
 Here is the conversation so far:
 {history}
+
+Uploaded File Context:
+{context}
 
 Here is a question:
 {input}""",
@@ -25,6 +28,9 @@ User Info:
 Here is the conversation so far:
 {history}
 
+Uploaded File Context:
+{context}
+
 Here is a question:
 {input}""",
     },
@@ -38,6 +44,9 @@ User Info:
 
 Here is the conversation so far:
 {history}
+
+Uploaded File Context:
+{context}
 
 Here is a question:
 {input}""",
@@ -53,6 +62,9 @@ User Info:
 Here is the conversation so far:
 {history}
 
+Uploaded File Context:
+{context}
+
 Here is a question:
 {input}""",
     },
@@ -66,6 +78,9 @@ User Info:
 
 Here is the conversation so far:
 {history}
+
+Uploaded File Context:
+{context}
 
 Here is a question:
 {input}""",
@@ -81,6 +96,9 @@ User Info:
 Here is the conversation so far:
 {history}
 
+Uploaded File Context:
+{context}
+
 Here is a question:
 {input}""",
     },
@@ -94,6 +112,9 @@ User Info:
 
 Here is the conversation so far:
 {history}
+
+Uploaded File Context:
+{context}
 
 Here is a question:
 {input}""",
@@ -109,6 +130,9 @@ User Info:
 Here is the conversation so far:
 {history}
 
+Uploaded File Context:
+{context}
+
 Here is a question:
 {input}""",
     },
@@ -122,6 +146,9 @@ User Info:
 
 Here is the conversation so far:
 {history}
+
+Uploaded File Context:
+{context}
 
 Here is a question:
 {input}""",
@@ -137,13 +164,18 @@ User Info:
 Here is the conversation so far:
 {history}
 
+If the user has uploaded a document, use its content provided below to help you answer.
+
+Uploaded File Context:
+{context}
+
 Here is a question:
 {input}""",
-    },
+    }
 ]
 
 
-#default prompt
+# default prompt
 default_prompt = """You are an intelligent and knowledgeable assistant.
 Use the conversation history below to understand the user's context and provide a helpful, accurate, and thoughtful answer — even if it doesn't match a specific expert category.
 
@@ -155,6 +187,9 @@ Conversation history:
 
 User's question:
 {input}
+
+Uploaded File Context:
+{context}
 
 Your response:"""
 
