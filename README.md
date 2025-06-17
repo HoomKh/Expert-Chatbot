@@ -1,7 +1,6 @@
 # 🧠 Expert Chatbot
 
-A smart, memory-enabled multi-domain chatbot built with **LangChain**, **OpenAI GPT-4**, and **Streamlit**. 
-It routes your question to the most relevant expert (e.g., biology, CS, medicine), keeps track of your conversation context with short-term memory, and remembers personal details using long-term memory — like your name, goals, or preferences.
+A smart, memory-enabled multi-domain chatbot powered by **LangChain**, **OpenAI GPT-4**, and **Streamlit**. It dynamically routes your query to the most suitable expert, keeps track of the conversation with short- and long-term memory, and now supports **document-based Q\&A** using **PDF/DOCX uploads** — making it ideal for intelligent document analysis and contextual question answering.
 
 ![LangChain](https://img.shields.io/badge/langchain-v0.1.17-blue)
 ![Streamlit](https://img.shields.io/badge/streamlit-%F0%9F%A7%A1-red)
@@ -11,62 +10,79 @@ It routes your question to the most relevant expert (e.g., biology, CS, medicine
 
 ## 🌟 Features
 
-- ✅ Multi-Expert Routing using LangChain
-- ✅ Support for 10+ specialized knowledge domains
-- ✅ Real-time token streaming via StreamHandler
-- ✅ Short-term memory per chat (ConversationBufferMemory)
-- ✅ Long-term memory across chats (ConversationSummaryMemory)
-- ✅ Memory filter to store only meaningful info (e.g. name, job)
-- ✅ Interactive Streamlit UI with chat history per session
-- ✅ Secure API key loading via `.env`
-- ✅ Modular, readable, and maintainable architecture
+* ✅ **Multi-Expert Routing** with LangChain `MultiPromptChain`
+* ✅ **10+ Expert Domains** (biology, CS, medicine, etc.)
+* ✅ **File-aware Q\&A** with document upload (PDF & DOCX)
+* ✅ **Per-Chat File Context** (each chat only sees its own file)
+* ✅ **Real-time Token Streaming** via custom `StreamHandler`
+* ✅ **Short-term Memory** per session (`ConversationBufferWindowMemory`)
+* ✅ **Long-term Memory** for personal facts (`ConversationSummaryMemory`)
+* ✅ **LTM Classifier** to selectively store only meaningful information
+* ✅ **Context Preview**: displays exact file text used to answer each query
+* ✅ **Persistent Multi-Chat History** per user session
+* ✅ **Modular Refactored Codebase** with clean separation of UI, logic, memory, and chains
+* ✅ **Secure OpenAI API Handling** via `.env`
 
 ---
 
-## 🏗️ Architecture
+## 🧠 Architecture Overview
 
 ```text
 expert_chatbot/
-├── app.py              # Main Streamlit UI (refactored)
-├── chains.py           # LangChain Router & Expert Chains
-├── handlers.py         # Token streaming handler
-├── memory.py           # Memory setup & LTM classifier
-├── prompt.py           # Expert and default prompt templates
-├── .env                # Your OpenAI API key (excluded)
+├── app.py                # Streamlit App Entry Point
+├── chains.py             # LangChain router and expert chains
+├── chat_handler.py       # Handles message flow, context prep, memory ops
+├── chat_display.py       # Chat message rendering logic
+├── handlers.py           # Streaming token handler
+├── memory.py             # Memory setup + meaningful memory filter
+├── prompt.py             # Prompt templates for each expert domain
+├── sidebar.py            # Dynamic chat list and controls
+├── session.py            # Streamlit session state management
+├── file_uploader.py      # File upload logic (PDF/DOCX)
+├── vectorstore/
+│   └── file_indexing.py  # Milvus-based document embedding and retrieval
 ├── requirements.txt
-└── README.md
+└── .env                  # API keys (excluded via .gitignore)
 ```
 
 ---
 
-## ⚙️ Setup Instructions
+## 🛠️ Setup Instructions
 
-### 1. Clone the repo
+### 1. Clone the Repository
 
 ```bash
 git clone https://github.com/HoomKH/expert_chatbot.git
 cd expert_chatbot
 ```
 
-### 2. Install dependencies
+### 2. Install Dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 3. Create your `.env` file
+### 3. Create a `.env` file
 
 ```env
-OPENAI_API_KEY=your_openai_api_key_here
+OPENAI_API_KEY=your_openai_key_here
 ```
 
-### 4. Run the app
+### 4. Run the App
 
 ```bash
 streamlit run app.py
 ```
 
-Then visit: [http://localhost:8501](http://localhost:8501)
+Then open: [http://localhost:8501](http://localhost:8501)
+
+---
+
+## 📎 Document Q\&A
+
+You can upload a PDF or DOCX file inside each chat. That file becomes the **contextual knowledge** for that specific conversation — all answers will only consider **that file**, not others.
+
+> 🔒 Each chat sees only its own document. Embeddings are chat-scoped, not global.
 
 ---
 
@@ -87,20 +103,22 @@ Then visit: [http://localhost:8501](http://localhost:8501)
 
 ## 🧪 Tech Stack
 
-| Layer            | Technology                     |
-|------------------|---------------------------------|
-| Frontend         | Streamlit                      |
-| LLM Backbone     | OpenAI GPT-4                   |
-| Routing Engine   | LangChain (MultiPromptChain)   |
-| Memory System    | LangChain Memory (short + long)|
-| Env Handling     | python-dotenv                  |
+| Layer               | Technology                      |
+| ------------------- | ------------------------------- |
+| Frontend UI         | Streamlit                       |
+| LLM Backbone        | OpenAI GPT-4                    |
+| Chain Orchestration | LangChain (MultiPromptChain)    |
+| Memory System       | LangChain Memory (short & long) |
+| Vector Storage      | Milvus                          |
+| Doc Parsing         | PyMuPDF / docx2txt              |
+| API Handling        | python-dotenv                   |
 
 ---
 
-## 🔐 Security Note
+## 🔐 Security Notes
 
-* Use `.env` to load your API key securely
-* Never commit `.env` to GitHub (it's in `.gitignore`)
+* Your `.env` file stores API keys securely
+* Make sure to **never push `.env`** to GitHub — it's already in `.gitignore`
 
 ```gitignore
 .env
@@ -111,7 +129,7 @@ __pycache__/
 
 ## 🙌 Contributions
 
-Pull requests are welcome. For major changes, open an issue first to discuss your idea.
+Have a new expert domain or feature idea? PRs and issues are welcome.
 
 ---
 
@@ -121,4 +139,4 @@ MIT © [HoomKH](https://github.com/HoomKH)
 
 ---
 
-> Built with ❤️ using LangChain, GPT-4, and Streamlit
+> Built with ❤️ using LangChain, GPT-4, Streamlit, and lots of contextual intelligence.
