@@ -6,7 +6,7 @@ def render_file_upload_popup():
 
     with st.popover("📎", use_container_width=True):
         st.markdown("#### Upload PDF")
-        uploaded_file = st.file_uploader("", type=["pdf"], key=f"upload-btn-{chat_id}")
+        uploaded_file = st.file_uploader(label="#", type=["pdf"], key=f"upload-btn-{chat_id}")
         if uploaded_file:
             safe_collection_name = f"user_doc_{chat_id}".replace(" ", "_")
             with st.spinner("📄 Indexing..."):

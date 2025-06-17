@@ -36,10 +36,11 @@ def handle_user_input(user_input, st):
         except:
             docs = retriever.get_relevant_documents(user_input)
         file_context = "\n\n".join([doc.page_content for doc in docs])
+        st.session_state[f"context_used_{chat_id}"] = file_context.strip()
+
     else:
         file_context = ""
-        
-    
+
     # Main RAG Invocation
     with st.spinner("Thinking..."):
         route_result = multi_chain.router_chain.invoke({"input": user_input})
@@ -47,31 +48,30 @@ def handle_user_input(user_input, st):
         final_inputs["ltm"] = ltm_summary
         final_inputs["history"] = current_memory.buffer_as_messages
         final_inputs["context"] = file_context
-        
+
         destination = route_result["destination"]
         if destination in multi_chain.destination_chains:
             output = multi_chain.destination_chains[destination].invoke(final_inputs)
         else:
             output = multi_chain.default_chain.invoke(final_inputs)
-        
+
         handler.text = output["text"]
-        
-    
+
     # Save to history
     history = st.session_state.chats[chat_id]
     history.append(("user", user_input))
     history.append(("assistant", handler.text.strip()))
     st.session_state.chats[chat_id] = history
-    
-    #Save to LTM if relevant
+
+    # Save to LTM if relevant
     if should_update_summary(user_input):
         try:
             st.session_state.long_term_memory.save_context(
-                {"input" : user_input}, {"output" : handler.text.strip()}
+                {"input": user_input}, {"output": handler.text.strip()}
             )
         except Exception:
             pass
-    
+
     # st.empty().markdown(
     #     "<div style='text-align:center; padding:1rem; font-size:1rem; color:gray;'>✨ Preparing expert response...</div>",
     #     unsafe_allow_html=True,

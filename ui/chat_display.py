@@ -36,6 +36,13 @@ def render_chat_ui(on_user_input):
             with st.chat_message(sender):
                 st.markdown(msg, unsafe_allow_html=False)
 
+            context_key = f"context_used_{chat_id}"
+            if sender == "assistant" and context_key in st.session_state:
+                context_used = st.session_state[context_key]
+                if context_used:
+                    with st.expander("📎 View context used for this response"):
+                        st.markdown(f"""<div style='white-space: pre-wrap; font-size: 0.9rem; color: gray;'>{context_used}</div>""", unsafe_allow_html=True)
+
     st.markdown("<div style='height: 3rem'></div>", unsafe_allow_html=True)
 
     col1, col2 = st.columns([10, 1])
@@ -45,4 +52,4 @@ def render_chat_ui(on_user_input):
         render_file_upload_popup()
 
     if user_input:
-        on_user_input(user_input, st)  
+        on_user_input(user_input, st)
